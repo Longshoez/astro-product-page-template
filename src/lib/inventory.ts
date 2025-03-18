@@ -99,13 +99,30 @@ export async function getSheetData(
   }
 }
 
-export async function getInventory(): Promise<StockData> {
+export async function getInventory(retryCount = 3): Promise<StockData> {
   try {
     const now = Date.now();
     if (cachedData.inventory && now - cachedData.timestamp < CACHE_TIME) {
       return cachedData.inventory;
     }
 
+    return await fetchInventoryWithRetry(retryCount);
+  } catch (error) {
+    console.error("Error obteniendo stock:", error);
+    // Si hay un error pero tenemos datos en caché aunque estén vencidos,
+    // mejor devolver esos que nada
+    if (cachedData.inventory) {
+      console.log("Usando datos en caché vencidos debido al error");
+      return cachedData.inventory;
+    }
+    return {};
+  }
+}
+
+async function fetchInventoryWithRetry(
+  retriesLeft: number,
+): Promise<StockData> {
+  try {
     const data = await getSheetData(INVENTORY_SHEET, "A2:M");
     const stockData: StockData = {};
     const seenSkus = new Set();
@@ -168,13 +185,21 @@ export async function getInventory(): Promise<StockData> {
 
     cachedData = {
       inventory: stockData,
-      timestamp: now,
+      timestamp: Date.now(),
     };
 
     return stockData;
   } catch (error) {
-    console.error("Error obteniendo stock:", error);
-    return {};
+    if (retriesLeft > 0) {
+      console.log(
+        `Reintentando obtener datos, intentos restantes: ${retriesLeft - 1}`,
+      );
+      await new Promise((resolve) =>
+        setTimeout(resolve, (3 - retriesLeft + 1) * 1000),
+      );
+      return fetchInventoryWithRetry(retriesLeft - 1);
+    }
+    throw error;
   }
 }
 
