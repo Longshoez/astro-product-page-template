@@ -7,15 +7,6 @@ const token = Astro.url.searchParams.get("token");
 <Layout>
   <div class="page-container">
     <div class="content-container">
-      <header class="page-header">
-        <img
-          src="/assets/logo.png"
-          alt="Logo de la Tienda"
-          width="100"
-          class="logo"
-        />
-        <h1>Finaliza tu compra</h1>
-      </header>
       {
         token ? (
           <ShippingForm token={token} client:load />
