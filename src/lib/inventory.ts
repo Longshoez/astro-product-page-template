@@ -23,7 +23,7 @@ export interface ProductUI extends StockItem {
   stock: boolean;
 }
 
-const INVENTORY_SHEET = "TuHojaDeInventario";
+const INVENTORY_SHEET = "Inventario";
 const PUBLISHED_SHEET_ID =
   "2PACX-1vRyo_8ixf17YTHOg0IlXZKxhSL0Hhiulq_ujFjg5b60010Cjry4ZiwMrYnOwFnh2YbWWU1xhLGejF8S";
 const GID = "1721761715";
@@ -38,7 +38,31 @@ let cachedData: {
 };
 
 function parseCSVLine(line: string): any[] {
-  return line.split(",").map((item) => item.trim());
+  const result = [];
+  let currentValue = "";
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === "," && !insideQuotes) {
+      result.push(currentValue.trim());
+      currentValue = "";
+    } else {
+      currentValue += char;
+    }
+  }
+
+  result.push(currentValue.trim());
+
+  return result.map((item) => {
+    if (item.startsWith('"') && item.endsWith('"')) {
+      return item.slice(1, -1).trim();
+    }
+    return item.trim();
+  });
 }
 
 export async function getSheetData(
