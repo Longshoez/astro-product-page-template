@@ -25,13 +25,14 @@ const shippingSchema = z.object({
   fullName: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   address: z.string().min(5, "La dirección debe ser más detallada"),
   city: z.string().min(2, "La ciudad es requerida"),
-  state: z.string().min(2, "El estado/provincia es requerido"),
-  zipCode: z
-    .string()
-    .regex(/^\d{4,6}$/, "El código postal debe tener entre 4 y 6 dígitos"),
+  state: z.string().min(2, "El departamento es requerido"),
+  zipCode: z.string().regex(/^\d{5}$/, "El código postal debe tener 5 dígitos"),
   phone: z
     .string()
-    .regex(/^(\+\d{1,3}\s?)?\d{8,12}$/, "Ingresa un número de teléfono válido"),
+    .regex(
+      /^(\+\d{1,3}\s?)?\d{9}$/,
+      "Ingresa un número de teléfono válido (9 dígitos)",
+    ),
   email: z.string().email("Ingresa un correo electrónico válido"),
   additionalNotes: z.string().optional(),
 });
@@ -52,7 +53,6 @@ export default function ShippingForm({ token }: { token: string }) {
     email: "",
     additionalNotes: "",
   });
-
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<TouchedFields>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -73,7 +73,6 @@ export default function ShippingForm({ token }: { token: string }) {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
     if (touched[name]) {
       const validation = validateField(name, value);
       setErrors((prev) => ({
@@ -86,7 +85,6 @@ export default function ShippingForm({ token }: { token: string }) {
   const handleBlur = (e: any) => {
     const { name, value } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
-
     const validation = validateField(name, value);
     setErrors((prev) => ({
       ...prev,
@@ -104,31 +102,26 @@ export default function ShippingForm({ token }: { token: string }) {
         newErrors[err.path[0]] = err.message;
       });
       setErrors(newErrors);
-
       const allTouched = {};
       Object.keys(formData).forEach((key) => {
         allTouched[key] = true;
       });
       setTouched(allTouched);
-
       return false;
     }
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     if (!validateAllFields()) {
       return;
     }
-
     setShowConfirmModal(true);
   };
 
   const confirmSubmit = async () => {
     setIsSubmitting(true);
     setShowConfirmModal(false);
-
     try {
       const response = await fetch("/api/save-shipping-info", {
         method: "POST",
@@ -140,14 +133,12 @@ export default function ShippingForm({ token }: { token: string }) {
           ...formData,
         }),
       });
-
       if (response.ok) {
         setSubmitStatus({
           success: true,
           message:
             "¡Información guardada correctamente! Recibirás tu pedido pronto.",
         });
-
         setFormData({
           fullName: "",
           address: "",
@@ -194,7 +185,6 @@ export default function ShippingForm({ token }: { token: string }) {
             dirección para realizar el envío de tu pedido.
           </p>
         </div>
-
         {submitStatus && (
           <div
             className={
@@ -204,7 +194,6 @@ export default function ShippingForm({ token }: { token: string }) {
             {submitStatus.message}
           </div>
         )}
-
         <form onSubmit={handleSubmit} className="shipping-form">
           <div className="field-group">
             <label htmlFor="fullName" className="shipping-label">
@@ -218,13 +207,12 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className={`shipping-input ${errors.fullName ? "input-error" : ""}`}
-              placeholder="Ej. Juan Pérez"
+              placeholder="Ej. Carlos Mendoza"
             />
             {errors.fullName && touched.fullName && (
               <p className="error-text">{errors.fullName}</p>
             )}
           </div>
-
           <div className="field-group">
             <label htmlFor="address" className="shipping-label">
               Dirección completa *
@@ -237,17 +225,16 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className={`shipping-input ${errors.address ? "input-error" : ""}`}
-              placeholder="Ej. Calle Principal #123"
+              placeholder="Ej. Av. Arequipa 123, Dpto 401"
             />
             {errors.address && touched.address && (
               <p className="error-text">{errors.address}</p>
             )}
           </div>
-
           <div className="form-row">
             <div className="field-group form-col">
               <label htmlFor="city" className="shipping-label">
-                Ciudad *
+                Ciudad/Distrito *
               </label>
               <input
                 type="text"
@@ -257,16 +244,15 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.city ? "input-error" : ""}`}
-                placeholder="Ej. Buenos Aires"
+                placeholder="Ej. Lima"
               />
               {errors.city && touched.city && (
                 <p className="error-text">{errors.city}</p>
               )}
             </div>
-
             <div className="field-group form-col">
               <label htmlFor="state" className="shipping-label">
-                Estado/Provincia *
+                Departamento *
               </label>
               <input
                 type="text"
@@ -276,14 +262,13 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.state ? "input-error" : ""}`}
-                placeholder="Ej. CABA"
+                placeholder="Ej. Lima"
               />
               {errors.state && touched.state && (
                 <p className="error-text">{errors.state}</p>
               )}
             </div>
           </div>
-
           <div className="form-row">
             <div className="field-group form-col">
               <label htmlFor="zipCode" className="shipping-label">
@@ -297,13 +282,12 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.zipCode ? "input-error" : ""}`}
-                placeholder="Ej. 1000"
+                placeholder="Ej. 15001"
               />
               {errors.zipCode && touched.zipCode && (
                 <p className="error-text">{errors.zipCode}</p>
               )}
             </div>
-
             <div className="field-group form-col">
               <label htmlFor="phone" className="shipping-label">
                 Teléfono *
@@ -316,14 +300,13 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.phone ? "input-error" : ""}`}
-                placeholder="Ej. +54 11 12345678"
+                placeholder="Ej. 987654321"
               />
               {errors.phone && touched.phone && (
                 <p className="error-text">{errors.phone}</p>
               )}
             </div>
           </div>
-
           <div className="field-group">
             <label htmlFor="email" className="shipping-label">
               Correo electrónico *
@@ -342,7 +325,6 @@ export default function ShippingForm({ token }: { token: string }) {
               <p className="error-text">{errors.email}</p>
             )}
           </div>
-
           <div className="field-group">
             <label htmlFor="additionalNotes" className="shipping-label">
               Notas adicionales
@@ -354,10 +336,9 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className="shipping-textarea"
-              placeholder="Instrucciones especiales para la entrega, puntos de referencia, etc."
+              placeholder="Referencias del domicilio, horarios de entrega preferidos, etc."
             />
           </div>
-
           <div className="button-wrapper">
             <button
               type="submit"
@@ -368,7 +349,6 @@ export default function ShippingForm({ token }: { token: string }) {
             </button>
           </div>
         </form>
-
         {/* Modal de Confirmación */}
         {showConfirmModal && (
           <div className="modal-overlay">
@@ -383,47 +363,39 @@ export default function ShippingForm({ token }: { token: string }) {
                   Una vez enviada, esta información no podrá ser modificada.
                 </p>
               </div>
-
               <div className="modal-body">
                 <div className="info-group">
                   <span className="info-label">Nombre completo:</span>
                   <span className="info-value">{formData.fullName}</span>
                 </div>
-
                 <div className="info-group">
                   <span className="info-label">Dirección:</span>
                   <span className="info-value">{formData.address}</span>
                 </div>
-
                 <div className="info-row">
                   <div className="info-col">
-                    <span className="info-label">Ciudad:</span>
+                    <span className="info-label">Ciudad/Distrito:</span>
                     <span className="info-value">{formData.city}</span>
                   </div>
-
                   <div className="info-col">
-                    <span className="info-label">Estado/Provincia:</span>
+                    <span className="info-label">Departamento:</span>
                     <span className="info-value">{formData.state}</span>
                   </div>
                 </div>
-
                 <div className="info-row">
                   <div className="info-col">
                     <span className="info-label">Código postal:</span>
                     <span className="info-value">{formData.zipCode}</span>
                   </div>
-
                   <div className="info-col">
                     <span className="info-label">Teléfono:</span>
                     <span className="info-value">{formData.phone}</span>
                   </div>
                 </div>
-
                 <div className="info-group">
                   <span className="info-label">Correo electrónico:</span>
                   <span className="info-value">{formData.email}</span>
                 </div>
-
                 {formData.additionalNotes && (
                   <div className="info-group">
                     <span className="info-label">Notas adicionales:</span>
@@ -433,7 +405,6 @@ export default function ShippingForm({ token }: { token: string }) {
                   </div>
                 )}
               </div>
-
               <div className="modal-footer">
                 <button className="secondary-button" onClick={cancelSubmit}>
                   Editar información
