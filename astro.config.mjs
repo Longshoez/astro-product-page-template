@@ -1,8 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
-import cloudflare from "@astrojs/cloudflare";
-
+import vercel from "@astrojs/vercel/serverless";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
@@ -13,12 +12,12 @@ export default defineConfig({
         ? {
             "Content-Security-Policy": `
         default-src 'self';
-        script-src 'self' https://sdk.mercadopago.com https://http2.mlstatic.com https://www.mercadopago.com https://storage.googleapis.com;
+        script-src 'self';
         style-src 'self' 'unsafe-inline';
         img-src 'self' data: https:;
-        connect-src 'self' https://api.mercadopago.com https://api.mercadolibre.com https://events.mercadopago.com;
-        frame-src 'self' https://www.mercadopago.com https://www.mercadolibre.com;
-        font-src 'self' https://http2.mlstatic.com;
+        connect-src 'self';
+        frame-src 'self';
+        font-src 'self';
       `
               .replace(/\s{2,}/g, " ")
               .trim(),
@@ -26,11 +25,7 @@ export default defineConfig({
         : {},
   },
   output: "server",
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-  }),
+  adapter: vercel({}),
   integrations: [react(), sitemap()],
   vite: {
     resolve: {

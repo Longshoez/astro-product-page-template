@@ -6,13 +6,13 @@
     "dev": "astro dev --host",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "deploy": "astro build && wrangler pages deploy"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.2.3",
     "@astrojs/react": "^4.2.1",
     "@astrojs/sitemap": "^3.0.1",
+    "@astrojs/vercel": "^8.1.2",
     "@hookform/resolvers": "^4.1.2",
     "@types/node": "^22.13.9",
     "@types/react": "^19.0.10",
