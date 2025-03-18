@@ -25,7 +25,7 @@ const shippingSchema = z.object({
   fullName: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   address: z.string().min(5, "La dirección debe ser más detallada"),
   city: z.string().min(2, "La ciudad es requerida"),
-  state: z.string().min(2, "El departamento es requerido"),
+  state: z.string().min(2, "El departamento/provincia es requerido"),
   zipCode: z.string().regex(/^\d{5}$/, "El código postal debe tener 5 dígitos"),
   phone: z
     .string()
@@ -64,31 +64,35 @@ export default function ShippingForm({ token }: { token: string }) {
       const fieldSchema = z.object({ [name]: shippingSchema.shape[name] });
       fieldSchema.parse({ [name]: value });
       return { valid: true, error: null };
-    } catch (error) {
-      const fieldError = error.errors.find((e) => e.path[0] === name);
+    } catch (error: any) {
+      const fieldError = error.errors.find((e: any) => e.path[0] === name);
       return { valid: false, error: fieldError?.message || "Campo inválido" };
     }
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (touched[name]) {
-      const validation = validateField(name, value);
+    if (touched[name as keyof FormData]) {
+      const validation = validateField(name as keyof FormData, value);
       setErrors((prev) => ({
         ...prev,
-        [name]: validation.valid ? null : validation.error,
+        [name]: validation.valid ? undefined : validation.error,
       }));
     }
   };
 
-  const handleBlur = (e: any) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
-    const validation = validateField(name, value);
+    const validation = validateField(name as keyof FormData, value);
     setErrors((prev) => ({
       ...prev,
-      [name]: validation.valid ? null : validation.error,
+      [name]: validation.valid ? undefined : validation.error,
     }));
   };
 
@@ -96,22 +100,22 @@ export default function ShippingForm({ token }: { token: string }) {
     try {
       shippingSchema.parse(formData);
       return true;
-    } catch (error) {
-      const newErrors = {};
+    } catch (error: any) {
+      const newErrors: FormErrors = {};
       error.errors.forEach((err: any) => {
-        newErrors[err.path[0]] = err.message;
+        newErrors[err.path[0] as keyof FormData] = err.message;
       });
       setErrors(newErrors);
-      const allTouched = {};
+      const allTouched: TouchedFields = {};
       Object.keys(formData).forEach((key) => {
-        allTouched[key] = true;
+        allTouched[key as keyof FormData] = true;
       });
       setTouched(allTouched);
       return false;
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateAllFields()) {
       return;
@@ -207,7 +211,7 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className={`shipping-input ${errors.fullName ? "input-error" : ""}`}
-              placeholder="Ej. Carlos Mendoza"
+              placeholder="Ej. Juan Paredes Quispe"
             />
             {errors.fullName && touched.fullName && (
               <p className="error-text">{errors.fullName}</p>
@@ -225,7 +229,7 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className={`shipping-input ${errors.address ? "input-error" : ""}`}
-              placeholder="Ej. Av. Arequipa 123, Dpto 401"
+              placeholder="Ej. Av. Arequipa 123, Dpto. 501"
             />
             {errors.address && touched.address && (
               <p className="error-text">{errors.address}</p>
@@ -244,7 +248,7 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.city ? "input-error" : ""}`}
-                placeholder="Ej. Lima"
+                placeholder="Ej. Miraflores"
               />
               {errors.city && touched.city && (
                 <p className="error-text">{errors.city}</p>
@@ -252,7 +256,7 @@ export default function ShippingForm({ token }: { token: string }) {
             </div>
             <div className="field-group form-col">
               <label htmlFor="state" className="shipping-label">
-                Departamento *
+                Departamento/Provincia *
               </label>
               <input
                 type="text"
@@ -282,7 +286,7 @@ export default function ShippingForm({ token }: { token: string }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`shipping-input ${errors.zipCode ? "input-error" : ""}`}
-                placeholder="Ej. 15001"
+                placeholder="Ej. 15046"
               />
               {errors.zipCode && touched.zipCode && (
                 <p className="error-text">{errors.zipCode}</p>
@@ -336,13 +340,17 @@ export default function ShippingForm({ token }: { token: string }) {
               onChange={handleChange}
               onBlur={handleBlur}
               className="shipping-textarea"
-              placeholder="Referencias del domicilio, horarios de entrega preferidos, etc."
+              placeholder="Instrucciones especiales para la entrega, puntos de referencia, etc."
             />
           </div>
           <div className="button-wrapper">
             <button
               type="submit"
-              className={`shipping-button ${Object.keys(errors).length > 0 ? "shipping-button-disabled" : ""}`}
+              className={`shipping-button ${
+                Object.values(errors).some((error) => error !== undefined)
+                  ? "shipping-button-disabled"
+                  : ""
+              }`}
               disabled={isSubmitting}
             >
               {isSubmitting ? "Enviando..." : "Confirmar datos de envío"}
@@ -378,7 +386,7 @@ export default function ShippingForm({ token }: { token: string }) {
                     <span className="info-value">{formData.city}</span>
                   </div>
                   <div className="info-col">
-                    <span className="info-label">Departamento:</span>
+                    <span className="info-label">Departamento/Provincia:</span>
                     <span className="info-value">{formData.state}</span>
                   </div>
                 </div>
