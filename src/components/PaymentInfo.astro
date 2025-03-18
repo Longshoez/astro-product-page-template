@@ -1,0 +1,28 @@
+---
+const { paymentId, status, merchantOrderId } = Astro.props;
+---
+
+<div class="payment-info">
+    <p class="message">
+        Thank you for your purchase. Your payment was successful.
+    </p>
+    <ul class="details">
+        <li>Payment ID: {paymentId}</li>
+        <li>Status: {status}</li>
+        <li>Merchant Order ID: {merchantOrderId}</li>
+    </ul>
+</div>
+
+<style>
+    .payment-info .message {
+        margin-bottom: 1rem;
+        color: black;
+    }
+
+    .payment-info .details {
+        color: black;
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+</style>

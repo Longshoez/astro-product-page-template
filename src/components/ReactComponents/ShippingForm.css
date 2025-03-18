@@ -1,0 +1,387 @@
+.shipping-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.shipping-header {
+  text-align: center;
+  color: #4a5568;
+  margin-bottom: 30px;
+}
+
+.shipping-header h2 {
+  color: #0a4c39;
+  margin-bottom: 10px;
+}
+
+.shipping-header p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.success-message {
+  background-color: #c6f6d5;
+  color: #2f855a;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-message::before {
+  content: "✓";
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message::before {
+  content: "✗";
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.shipping-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
+.shipping-label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.shipping-input {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #e2e8f0;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.shipping-input:focus {
+  border-color: #0a4c39;
+  box-shadow: 0 0 0 2px rgba(10, 76, 57, 0.2);
+}
+
+.input-error {
+  border-color: #e53e3e;
+}
+
+.input-error:focus {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.2);
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.shipping-textarea {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #e2e8f0;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.shipping-textarea:focus {
+  border-color: #0a4c39;
+  box-shadow: 0 0 0 2px rgba(10, 76, 57, 0.2);
+}
+
+.button-wrapper {
+  margin-top: 15px;
+}
+
+.shipping-button {
+  background-color: #0a4c39;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.shipping-button:hover {
+  background-color: #0d6b50;
+}
+
+.shipping-button-disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.shipping-button-disabled:hover {
+  background-color: #a0aec0;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-col {
+  flex: 1;
+}
+
+/* Fondo con degradado para las terminaciones */
+.page-wrapper {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  position: relative;
+}
+
+.shipping-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  margin: -20px;
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      41.74% 98.84% at 61.04% 47.01%,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    linear-gradient(68.99deg, #084737 10.95%, #0a4c39 60.57%, #0c523b 103.7%),
+    #0a4c39;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  animation: modalFadeIn 0.3s ease forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 {
+  color: #0a4c39;
+  margin-bottom: 10px;
+}
+
+.warning-text {
+  color: #dd6b20;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.info-group {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-col {
+  flex: 1;
+}
+
+.info-label {
+  display: block;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.info-value {
+  display: block;
+  font-size: 16px;
+  color: #1a202c;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.primary-button {
+  background-color: #0a4c39;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+  transition: background-color 0.3s;
+}
+
+.primary-button:hover {
+  background-color: #0d6b50;
+}
+
+.secondary-button {
+  background-color: #ffffff;
+  color: #4a5568;
+  padding: 10px 16px;
+  border-radius: 5px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+  transition: all 0.3s;
+}
+
+.secondary-button:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+}
+@media screen and (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-col {
+    width: 100%;
+  }
+
+  .shipping-container {
+    padding: 15px;
+    width: 95%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .shipping-header h2 {
+    font-size: 20px;
+  }
+
+  .shipping-header p {
+    font-size: 14px;
+  }
+
+  .shipping-input,
+  .shipping-textarea {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .confirm-modal {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .shipping-container {
+    padding: 10px;
+  }
+
+  .shipping-header h2 {
+    font-size: 18px;
+  }
+}

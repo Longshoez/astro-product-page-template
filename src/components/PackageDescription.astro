@@ -1,0 +1,28 @@
+---
+const { description } = Astro.props;
+---
+
+<div class="description-box">
+  <h2>Descripción del Paquete</h2>
+  <div class="description">{description}</div>
+</div>
+
+<style>
+  .description-box {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .description-box h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .description {
+    color: #555;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+</style>

@@ -1,0 +1,160 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PackageHeader from "../../components/PackageHeader.astro";
+import PackageDescription from "../../components/PackageDescription.astro";
+import PaymentOptions from "../../components/ReactComponents/PaymentOptions";
+import GuaranteeBox from "../../components/GuaranteeBox.astro";
+import OrderSummary from "../../components/OrderSummary.astro";
+import NotFound from "../../components/ReactComponents/NotFound";
+import { getInventory } from "../../lib/inventory";
+
+const { sku } = Astro.params;
+let packageData = null;
+let stockInfo = null;
+let errorType = null;
+
+try {
+  const stockData = await getInventory();
+
+  if (stockData && stockData[sku]) {
+    stockInfo = stockData[sku];
+
+    if (stockInfo.disponible > 0) {
+      packageData = {
+        title: stockInfo.title,
+        price: stockInfo.price,
+        originalPrice: stockInfo.regularPrice,
+        savings: Math.round(stockInfo.regularPrice - stockInfo.price),
+        description: stockInfo.notas || `Paquete ${sku}`,
+        availableStock: stockInfo.disponible,
+      };
+    } else {
+      errorType = "sin_stock";
+      console.warn(
+        `Producto encontrado pero sin stock disponible (${stockInfo.disponible}).`,
+      );
+      throw new Error("Producto encontrado pero sin stock disponible.");
+    }
+  } else {
+    console.warn(`SKU "${sku}" no encontrado en datos reales`);
+    const allKeys = Object.keys(stockData);
+    console.log(
+      "Revisando posibles coincidencias parciales o problemas de formato...",
+    );
+
+    const similarKeys = allKeys.filter(
+      (key) =>
+        key.toLowerCase().includes(sku?.toLowerCase() || "") ||
+        (sku?.toLowerCase() || "").includes(key.toLowerCase()),
+    );
+
+    if (similarKeys.length > 0) {
+      console.log("SKUs similares encontrados:", similarKeys);
+    } else {
+      console.log("No se encontraron SKUs similares");
+    }
+
+    errorType = "no_existe";
+    throw new Error("Producto no encontrado en el catálogo.");
+  }
+} catch (error) {
+  if (error instanceof Error) {
+    if (errorType === "sin_stock") {
+      console.warn(`Paquete con SKU ${sku} sin stock disponible.`);
+      Astro.response.status = 404;
+    } else if (errorType === "no_existe") {
+      console.warn(`Paquete con SKU ${sku} no encontrado en catálogo.`);
+      Astro.response.status = 404;
+    } else {
+      console.error("Error inesperado:", error);
+      Astro.response.status = 500;
+      errorType = "error_general";
+    }
+  }
+}
+---
+
+{
+  packageData ? (
+    <Layout>
+      <div class="package-container">
+        <div class="back-button-container">
+          <a href="/" class="back-button">
+            <span class="arrow">←</span> Volver a inicio
+          </a>
+        </div>
+        <div class="package-detail">
+          <PackageHeader
+            title={packageData.title}
+            price={packageData.price}
+            originalPrice={packageData.originalPrice}
+            savings={packageData.savings}
+          />
+          <PackageDescription description={packageData.description} />
+          <PaymentOptions
+            client:load
+            basePrice={packageData.price}
+            title={packageData.title}
+            packageId={sku!}
+          />
+          {/*          <GuaranteeBox />*/}
+        </div>
+        <OrderSummary title={packageData.title} />
+      </div>
+    </Layout>
+  ) : (
+    <Layout>
+      <NotFound client:load errorType={errorType!} sku={sku} />
+    </Layout>
+  )
+}
+<style>
+  html {
+    font-size: 14px;
+    color: #333;
+  }
+  .package-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  @media (max-width: 768px) {
+    .package-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  .package-detail {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  .back-button-container {
+    grid-column: 1 / -1;
+    margin-bottom: 1rem;
+  }
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    color: #444;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+  }
+  .back-button:hover {
+    background-color: #e9ecef;
+    color: #212529;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+  .arrow {
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+  }
+</style>

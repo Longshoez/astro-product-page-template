@@ -1,0 +1,137 @@
+---
+const { title, price, deliveryPrice } = Astro.props;
+---
+
+<div class="order-summary">
+  <h2>Resumen de Compra</h2>
+  <div class="summary-item">
+    <span>Producto:</span>
+    <span>{title}</span>
+  </div>
+  {/*
+  <div class="summary-item">
+    <span>Precio:</span>
+    <span>S/. {price.toFixed(2)}</span>
+  </div>
+  
+  <div class="summary-item">
+    <span>Envío:</span>
+    <span>{deliveryPrice ? "S/. " + deliveryPrice.toFixed(2) : "Gratis"}</span>
+  </div>
+   
+  <div class="summary-divider"></div>
+  <div class="summary-total">
+    <span>Total:</span>
+    <span>S/. {price.toFixed(2)}</span>
+  </div>
+  */}
+
+  <div class="secure-payment">
+    <span class="secure-icon">🔒</span>
+    <span>Pago 100% Seguro</span>
+  </div>
+
+  <div class="help-section">
+    <h3>¿Necesitas ayuda?</h3>
+    <p>Contáctanos por WhatsApp al:</p>
+    <a href="https://wa.me/+51939114496" class="whatsapp-button">
+      <span class="whatsapp-icon">
+        <img src="/icons/whatsapp_icon.svg" width="30px" alt="Whatsp Icon" />
+      </span>
+      Enviar Mensaje
+    </a>
+  </div>
+</div>
+
+<style>
+  .order-summary {
+    background: #f5f5f5;
+    color: #333;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1rem; /* Aumentamos el tamaño de la fuente general */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    height: fit-content;
+    transition: all 0.3s ease;
+  }
+  .order-summary h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Aumentamos el tamaño de la fuente del título */
+    color: #0a4c39; /* Matching color from the button */
+  }
+  .summary-item,
+  .summary-total,
+  .secure-payment,
+  .help-section {
+    margin-bottom: 1rem;
+    font-size: 1.1rem; /* Aumentamos el tamaño de la fuente de los ítems */
+  }
+  .summary-divider {
+    border-top: 1px solid #ccc;
+    margin: 1rem 0;
+  }
+  .summary-total span {
+    font-weight: 600;
+    color: #0a4c39; /* Matching color from the button */
+  }
+  .secure-payment {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .secure-payment span {
+    font-weight: 600;
+  }
+  .help-section p {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Mantenemos el botón sin cambios de tamaño */
+  .whatsapp-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #0a4c39 0%, #0c523b 100%);
+    color: whitesmoke;
+    padding: 0.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.2rem; /* El tamaño de la fuente en el botón sigue igual */
+    width: 85%;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin: auto;
+  }
+
+  .whatsapp-button:hover {
+    background: linear-gradient(135deg, #0c523b 0%, #0e5940 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(10, 76, 57, 0.4);
+  }
+
+  .whatsapp-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(10, 76, 57, 0.2);
+  }
+
+  .whatsapp-button .whatsapp-icon {
+    font-size: 18px;
+  }
+
+  /* Styles for responsiveness */
+  @media (max-width: 480px) {
+    .order-summary {
+      padding: 0.8rem;
+      font-size: 1rem; /* Aumentamos ligeramente el tamaño de la fuente en móviles */
+    }
+
+    .whatsapp-button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem; /* El tamaño de la fuente del botón sigue siendo el mismo */
+    }
+
+    .whatsapp-button .whatsapp-icon {
+      font-size: 16px;
+    }
+  }
+</style>

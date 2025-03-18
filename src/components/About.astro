@@ -1,0 +1,100 @@
+---
+import astroLogo from "../assets/astro.svg";
+import background from "../assets/background.svg";
+import staticModel from "../assets/model_static.png";
+---
+
+<section
+  id="about"
+  class="container"
+  style={{ display: "flex", flexDirection: "column" }}
+>
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "row",
+      height: "50%",
+      justifyContent: "center",
+      gap: "30px",
+    }}
+  >
+    <div style={{ width: "30%" }}>
+      <h2>Che cos'è la Microdose di Ayahuasca?</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non odio
+        quis elit sagittis luctus eget ac metus. Fusce finibus nec risus vitae
+        facilisis. Morbi sit amet tempor arcu. Nullam eget velit venenatis,
+        tincidunt sapien ac, commodo odio. Aenean sapien mauris, lobortis at
+        nisl quis, gravida accumsan dui. Vivamus rhoncus ornare urna, ut mollis
+        metus facilisis ut. Cras lacinia eros metus, ac sollicitudin ligula
+        maximus hendrerit. Phasellus suscipit nunc mi
+      </p>
+    </div>
+    <img
+      src={staticModel.src}
+      alt=""
+      fetchpriority="high"
+      width="300"
+      height="300"
+      style={{ height: "80%", objectFit: "cover" }}
+    />
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "row",
+      height: "50%",
+      justifyContent: "center",
+      gap: "30px",
+    }}
+  >
+    <img
+      src={staticModel.src}
+      alt=""
+      fetchpriority="high"
+      width="300"
+      height="300"
+      style={{ height: "80%", objectFit: "cover" }}
+    />
+    <div style={{ width: "30%" }}>
+      <h2>Che cos'è la Microdose di Ayahuasca?</h2>
+      <ul>
+        <li>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
+          odio quis elit sagittis
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
+          odio quis elit sagittis
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
+          odio quis elit sagittis
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
+          odio quis elit sagittis
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  * {
+  }
+  .container {
+    background: #013726;
+    height: 100%;
+    padding: 2rem;
+    background: white;
+    scroll-snap-align: start;
+    /*font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;*/
+  }
+
+  #section {
+    flex-direction: row;
+    border: 1px solid white;
+  }
+</style>

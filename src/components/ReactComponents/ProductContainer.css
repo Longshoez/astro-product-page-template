@@ -1,0 +1,129 @@
+.product-container {
+  padding: 0.3rem;
+  border-radius: 15px;
+  transition: all 0.3s ease-in-out;
+  width: 350px;
+  height: 490px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+
+.benefit-general {
+  font-size: 0.9rem;
+  margin: 0 0 5px 0;
+  color: #555 !important;
+  font-weight: 500;
+}
+
+.product-container-details {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 900px;
+}
+
+@media (max-width: 768px) {
+  .product-container-details {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+}
+
+.product-content {
+  background: white;
+  width: 100%;
+  height: 100%;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.product-image {
+  width: 100%;
+  height: 45%;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.product-title {
+  font-size: 1.2rem;
+  margin: 0;
+  line-height: 1.2;
+  color: #012f1f;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.product-detail {
+  font-size: 0.8rem;
+  margin: 0;
+  color: #555;
+  line-height: 1.3;
+}
+
+.product-price {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #222;
+  font-weight: bold;
+}
+
+.product-deal {
+  font-size: 0.8rem;
+  margin: 0;
+  color: #4caf50 !important;
+  font-weight: 500;
+}
+
+.product-button {
+  width: fit-content;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  align-self: center;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.product-button:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .product-content {
+    padding: 0.5rem;
+  }
+
+  .product-title {
+    font-size: 0.9rem;
+  }
+
+  .product-detail {
+    font-size: 0.75rem;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+  }
+
+  .product-button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.75rem;
+  }
+}

@@ -1,0 +1,28 @@
+---
+// component imports
+import Seo from "../components/Seo.astro";
+
+const { title, description, image, frontmatter, robots } = Astro.props;
+---
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <Seo {title} {description} url={Astro.url} {image} {frontmatter} {robots} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://analytics.ahrefs.com/analytics.js" data-key="e3qUhBlqpYKCXaCX+HXuUg" async></script>
+</head>

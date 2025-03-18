@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ShippingForm from "../components/ReactComponents/ShippingForm";
+
+const token = Astro.url.searchParams.get("token");
+---
+
+<Layout>
+  <div class="page-container">
+    <div class="content-container">
+      <header class="page-header">
+        <img
+          src="/assets/logo.png"
+          alt="Logo de la Tienda"
+          width="100"
+          class="logo"
+        />
+        <h1>Finaliza tu compra</h1>
+      </header>
+
+      {
+        token ? (
+          <ShippingForm token={token} client:load />
+        ) : (
+          <div class="error-message">
+            <p>
+              No se ha proporcionado un token válido. Por favor, verifica el
+              enlace e intenta nuevamente.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .page-container {
+    background-color: #f7fafc;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .content-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .logo {
+    margin: 0 auto 20px;
+    display: block;
+  }
+
+  .page-header h1 {
+    color: #2d3748;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .error-message {
+    background-color: #fed7d7;
+    color: #c53030;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+</style>
