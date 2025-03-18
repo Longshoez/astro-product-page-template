@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ShippingForm from "../components/ReactComponents/ShippingForm";
-
 const token = Astro.url.searchParams.get("token");
 ---
 
@@ -17,7 +16,6 @@ const token = Astro.url.searchParams.get("token");
         />
         <h1>Finaliza tu compra</h1>
       </header>
-
       {
         token ? (
           <ShippingForm token={token} client:load />
@@ -30,9 +28,61 @@ const token = Astro.url.searchParams.get("token");
           </div>
         )
       }
+      <div id="success-message" class="success-message hidden">
+        <h2>¡Compra realizada con éxito!</h2>
+        <p>
+          Gracias por tu compra. Pronto recibirás un correo con los detalles.
+        </p>
+      </div>
     </div>
   </div>
 </Layout>
+
+<script>
+  import confetti from "canvas-confetti";
+
+  function showConfetti() {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"],
+      });
+
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"],
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    })();
+  }
+
+  // Detectar cuando la compra es exitosa
+  document.addEventListener("DOMContentLoaded", () => {
+    // Escuchar un evento personalizado desde ShippingForm
+    document.addEventListener("purchaseSuccess", () => {
+      // Mostrar el mensaje de éxito
+      const successMessage = document.getElementById("success-message");
+      if (successMessage) {
+        successMessage.classList.remove("hidden");
+      }
+
+      // Lanzar el confeti
+      showConfetti();
+    });
+  });
+</script>
 
 <style>
   .page-container {
@@ -40,33 +90,50 @@ const token = Astro.url.searchParams.get("token");
     min-height: 100vh;
     padding: 40px 20px;
   }
-
   .content-container {
     max-width: 800px;
     margin: 0 auto;
   }
-
   .page-header {
     text-align: center;
     margin-bottom: 30px;
   }
-
   .logo {
     margin: 0 auto 20px;
     display: block;
   }
-
   .page-header h1 {
     color: #2d3748;
     font-size: 28px;
     margin-bottom: 10px;
   }
-
   .error-message {
     background-color: #fed7d7;
     color: #c53030;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+  }
+  .success-message {
+    background-color: #c6f6d5;
+    color: #276749;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  .hidden {
+    display: none;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>

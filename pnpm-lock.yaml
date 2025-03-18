@@ -35,6 +35,9 @@ importers:
       astro:
         specifier: ^5.4.2
         version: 5.5.2(@types/node@22.13.10)(rollup@4.36.0)(typescript@5.8.2)
+      canvas-confetti:
+        specifier: ^1.9.3
+        version: 1.9.3
       google-auth-library:
         specifier: ^9.15.1
         version: 9.15.1
@@ -1148,6 +1151,9 @@ packages:
 
   caniuse-lite@1.0.30001705:
     resolution: {integrity: sha512-S0uyMMiYvA7CxNgomYBwwwPUnWzFD83f3B1ce5jHUfHTH//QL6hHsreI8RVC5606R4ssqravelYO5TU6t8sEyg==}
+
+  canvas-confetti@1.9.3:
+    resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -4034,6 +4040,8 @@ snapshots:
   camelcase@8.0.0: {}
 
   caniuse-lite@1.0.30001705: {}
+
+  canvas-confetti@1.9.3: {}
 
   ccount@2.0.1: {}
 
