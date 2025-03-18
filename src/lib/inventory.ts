@@ -24,9 +24,8 @@ export interface ProductUI extends StockItem {
 }
 
 const INVENTORY_SHEET = "Inventario";
-const PUBLISHED_SHEET_ID =
-  "2PACX-1vRyo_8ixf17YTHOg0IlXZKxhSL0Hhiulq_ujFjg5b60010Cjry4ZiwMrYnOwFnh2YbWWU1xhLGejF8S";
-const GID = "1721761715";
+const PUBLIC_PUBLISHED_SHEET_ID = import.meta.env.PUBLIC_PUBLISHED_SHEET_ID;
+const PUBLIC_GID = "0";
 
 function parseCSVLine(line: string): any[] {
   const result = [];
@@ -64,8 +63,7 @@ export async function getSheetData(
     const encodedRange = encodeURIComponent(range);
     // Añadir timestamp para prevenir cualquier caché
     const timestamp = Date.now();
-    const url = `https://docs.google.com/spreadsheets/d/e/${PUBLISHED_SHEET_ID}/pub?output=csv&gid=${GID}&range=${encodedRange}&_t=${timestamp}`;
-
+    const url = `https://docs.google.com/spreadsheets/d/e/${PUBLIC_PUBLISHED_SHEET_ID}/pub?output=csv&gid=${PUBLIC_GID}&range=${encodedRange}&_t=${timestamp}`;
     const response = await fetch(url, {
       headers: {
         "User-Agent":
@@ -75,17 +73,15 @@ export async function getSheetData(
         Pragma: "no-cache",
         Expires: "0",
       },
-      // En entornos SSR, esto asegurará que no se use caché
       cache: "no-store",
     });
-
+    console.log("respuesta", response);
     if (!response.ok) {
       const errorContent = await response.text();
       throw new Error(
         `HTTP Error ${response.status}: ${errorContent.slice(0, 100)}...`,
       );
     }
-
     const csvData = await response.text();
     return csvData
       .split("\n")

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ayahuasca-ilumina",
+  "private_key_id": "8a3bc0af1de8ce2dae8a07abfe9fb23792344565",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDISPtOubBKNAXh\nc3guxZRqP6Dzb2iZBGFjaJ5Vap1Zv3nFrtluPKnQfpDnbEkS6GpAvK6g+yaCrlSS\n0JC6FZUxDs8HAzutLFQzYD4QjfJqpD7Qgl4Y7zYdHIk0ZUFcgAsjhtwZ+4y8bjox\nB0PVBHUhjHJhKnA9mQA3dmiM56POIP9LzMHCHQpSqnx7epXdPeLfJ7JeO8mqhrrq\nROFQpdbGRjIV6LAmS1+23Qgpac1Pn4Yy4FP27rFq+Xxw5Io6b/OfobzWqbg4CLXQ\nGBN1RRiEqjox6bHlBEkOhUVMg5ychSl6hE7PUlPNJ+V96kZ6TAhuNHiUrDupZkFc\nYlfxqLG9AgMBAAECggEAJONgOd80a25KePwh8gdc7va6J6voyWoHn94Ib3X79igw\nfurVzBprMmXlPWJx0QQycaruxOKM9Lu0Avhb95H7EPaHxeRgDOShu3ap57WlJOQM\nV63zM8d3IYR8dsSBdc51fr0bc8OjZ58ro5URdr3j7uJlvKSq2IWCBzUNS4psXo3c\nlgjU6RrUhry3fmN66lkqBIj6paPnoDupEj/yrk1uqYRb4fAGPgCbrD8Fe7PMagNp\ng05Jqp/ZLzHH+v2fxbeRY0T+2ys9P6c32DTZFpSS9x/nOeSMIzCfFpsymo/aleM5\ndhT18jBk4eqwpDqVwwTLRC2zZO2Rhnn9LYhdOO91IQKBgQD13OO1gzhJqXjV9f88\nB7Ii3m9qwqQkBQiG8YV0yCskXsAWVSI/tePgnt5nJ6XnMwht59zdS4AT0diBP6aV\ngW8kMArKB3124rjuNqIeNlG8/hEDCuhkp4KocuG7lurbqaLLsZQgykCXKtZwIyjM\n4OIZtaZaGi4tu9wxUWPE3GwdjQKBgQDQiwN/DMWwinUUKGBFgl0SiwA3Q5B+e0rJ\nXi2YHJv5YWeaDir0RaEjWQxeCRurMqPvrHYWNB8++Xhg8jJkQI0zA6vmaMZsWMpj\nLX5fIcu3qbOlCgR+NMi5R4z9FFDXpcivjy2JOYsHL8+LCBROT194diwqPGpMqZCl\nC2AThvxg8QKBgQDDRRvppv2Gq74YGVgNAoO94/KT1WFuZjz+iEaZmP2C1mozkoww\nE7OYTDWRslC2zrZsLBIkBHoFw83z4WzaI0H1eN6o1MgWKz37nJKn8jZ7J0K1qu0m\nPFCunwef6N5Bdnqg0zo1zMz+AvzrdVFLX3TUPIyR1WdF1YWt+dmGmhaYZQKBgFiC\nV6aJnjHSYeR/SnTV4ninRB0wcNgtrc0PSpyfr9dE7vqkfriUANMGzUfv561eXdOw\nR6Ie1xAcQ2oqARcpioQXT9MHrwd3G9bCDTuFFXhK7zLhsIx8DKEObBlRkQolk6pn\nQzVVldskAJsKf8vIxkVTKmV2pMsKwJg73rgK93yRAoGAPCbDV40jWnz/LIJY66/h\ndKaPFr4qx08rzo+2tqZFQCdKdrq3dFPeLM8ofzHwIeNMKlbc5gHsPLtTAQBfkoCU\nkzBSLhSyqu6OpHNfGrjOAsYHUGzIyzKA4DXP2antifleo+iXJjL5XYHb6lg2Kc3u\n7gwcUE66la0jPILQ32n9duE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ayahuasca-ilumina@ayahuasca-ilumina.iam.gserviceaccount.com",
+  "client_id": "117155427199715107088",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ayahuasca-ilumina%40ayahuasca-ilumina.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

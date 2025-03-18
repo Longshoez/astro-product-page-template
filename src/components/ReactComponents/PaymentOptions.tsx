@@ -72,7 +72,6 @@ const PaymentOptions = ({
   const handleCulqiSuccess = (token: any) => {
     console.log("Pago exitoso", token);
 
-    // Agregar información extra al token para enviar al backend
     const paymentInfo = {
       token_id: token.id,
       product_id: packageId,
@@ -84,7 +83,6 @@ const PaymentOptions = ({
       is_subscription: token.isSubscription || false,
     };
 
-    // Redirigir a la página de completar detalles con la información necesaria
     const queryParams = new URLSearchParams({
       token: token.id,
       product_type: productType,

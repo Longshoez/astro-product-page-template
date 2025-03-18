@@ -30,9 +30,13 @@ const shippingSchema = z.object({
   phone: z
     .string()
     .regex(
-      /^(\+\d{1,3}\s?)?\d{9}$/,
-      "Ingresa un número de teléfono válido (9 dígitos)",
-    ),
+      /^(\+?(\d{1,3}))?[-.\s]?(\(?\d{1,6}\)?)?[-.\s]?(\d{1,6})[-.\s]?(\d{1,6})[-.\s]?(\d{1,6})$/,
+      "Ingresa un número de teléfono válido",
+    )
+    .refine((value) => {
+      const digitsOnly = value.replace(/[^\d]/g, "");
+      return digitsOnly.length >= 7 && digitsOnly.length <= 15;
+    }, "El número debe tener entre 7 y 15 dígitos"),
   email: z.string().email("Ingresa un correo electrónico válido"),
   additionalNotes: z.string().optional(),
 });

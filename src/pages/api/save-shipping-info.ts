@@ -68,11 +68,9 @@ export const POST: APIRoute = async ({ request }) => {
       orderId,
     ];
     try {
-      //@ts-ignore
-      await appendToSheet(import.meta.env.GOOGLE_SHEET_ID, rowData);
+      await appendToSheet(import.meta.env.PUBLIC_SHEET_ID, rowData);
 
-      //@ts-ignore
-      const resend = new Resend(import.meta.env.RESEND_API_KEY);
+      const resend = new Resend(import.meta.env.PUBLIC_RESEND_API_KEY);
 
       await sendCustomerEmail(resend, {
         fullName,
@@ -150,9 +148,9 @@ export const POST: APIRoute = async ({ request }) => {
 async function appendToSheet(spreadsheetId: string, rowData: any) {
   const credentials = {
     //@ts-ignore
-    email: import.meta.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    email: import.meta.env.PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL,
     //@ts-ignore
-    key: import.meta.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    key: import.meta.env.PUBLIC_GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   };
   if (!credentials.key || !credentials.email) {
