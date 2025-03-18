@@ -28,15 +28,6 @@ const PUBLISHED_SHEET_ID =
   "2PACX-1vRyo_8ixf17YTHOg0IlXZKxhSL0Hhiulq_ujFjg5b60010Cjry4ZiwMrYnOwFnh2YbWWU1xhLGejF8S";
 const GID = "1721761715";
 
-const CACHE_TIME = 3600 * 1000;
-let cachedData: {
-  inventory: StockData | null;
-  timestamp: number;
-} = {
-  inventory: null,
-  timestamp: 0,
-};
-
 function parseCSVLine(line: string): any[] {
   const result = [];
   let currentValue = "";
@@ -71,14 +62,21 @@ export async function getSheetData(
 ): Promise<SheetValues> {
   try {
     const encodedRange = encodeURIComponent(range);
-    const url = `https://docs.google.com/spreadsheets/d/e/${PUBLISHED_SHEET_ID}/pub?output=csv&gid=${GID}&range=${encodedRange}`;
+    // Añadir timestamp para prevenir cualquier caché
+    const timestamp = Date.now();
+    const url = `https://docs.google.com/spreadsheets/d/e/${PUBLISHED_SHEET_ID}/pub?output=csv&gid=${GID}&range=${encodedRange}&_t=${timestamp}`;
 
     const response = await fetch(url, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
         Accept: "text/csv",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
       },
+      // En entornos SSR, esto asegurará que no se use caché
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -99,107 +97,97 @@ export async function getSheetData(
   }
 }
 
-export async function getInventory(retryCount = 3): Promise<StockData> {
-  try {
-    const now = Date.now();
-    if (cachedData.inventory && now - cachedData.timestamp < CACHE_TIME) {
-      return cachedData.inventory;
-    }
+async function fetchInventory(maxRetries = 3): Promise<StockData> {
+  let retries = 0;
 
-    return await fetchInventoryWithRetry(retryCount);
-  } catch (error) {
-    console.error("Error obteniendo stock:", error);
-    // Si hay un error pero tenemos datos en caché aunque estén vencidos,
-    // mejor devolver esos que nada
-    if (cachedData.inventory) {
-      console.log("Usando datos en caché vencidos debido al error");
-      return cachedData.inventory;
+  while (retries < maxRetries) {
+    try {
+      const data = await getSheetData(INVENTORY_SHEET, "A2:M");
+      const stockData: StockData = {};
+      const seenSkus = new Set();
+
+      if (data && data.length > 0) {
+        data.forEach((row, index) => {
+          if (row.length < 13) {
+            console.warn(`Fila ${index + 2} inválida (incompleta). Omitiendo.`);
+            return;
+          }
+
+          const [
+            sku,
+            title,
+            price,
+            regularPrice,
+            disponible,
+            total,
+            notas,
+            featured,
+            tipo,
+            tier,
+            benefitGeneral,
+            quienes_pueden_usarlo,
+            uso_diario,
+          ] = row;
+
+          const cleanSku = String(sku).trim();
+          if (!cleanSku) {
+            console.warn(`Fila ${index + 2} sin SKU válido. Omitiendo.`);
+            return;
+          }
+
+          if (seenSkus.has(cleanSku)) {
+            console.warn(`SKU duplicado: ${cleanSku} en fila ${index + 2}`);
+            return;
+          }
+
+          seenSkus.add(cleanSku);
+          stockData[cleanSku] = {
+            sku: cleanSku,
+            title: String(title),
+            price: Math.max(0, Number(price) || 0),
+            regularPrice: Math.max(0, Number(regularPrice) || 0),
+            disponible: Math.max(0, Number(disponible) || 0),
+            total: Math.max(0, Number(total) || 0),
+            notas: String(notas),
+            featured: String(featured).toUpperCase() === "TRUE",
+            tipo:
+              String(tipo).toLowerCase() === "subscription"
+                ? "subscription"
+                : "package",
+            tier: Math.max(0, Number(tier) || 0),
+            benefitGeneral: String(benefitGeneral),
+            quienes_pueden_usarlo: String(quienes_pueden_usarlo),
+            uso_diario: String(uso_diario),
+          };
+        });
+      }
+
+      return stockData;
+    } catch (error) {
+      retries++;
+      if (retries >= maxRetries) {
+        console.error(
+          "Error obteniendo stock después de varios intentos:",
+          error,
+        );
+        throw error;
+      }
+      console.log(
+        `Reintentando obtener datos, intento ${retries} de ${maxRetries}`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, retries * 1000));
     }
-    return {};
   }
+
+  return {};
 }
 
-async function fetchInventoryWithRetry(
-  retriesLeft: number,
-): Promise<StockData> {
+export async function getInventory(): Promise<StockData> {
   try {
-    const data = await getSheetData(INVENTORY_SHEET, "A2:M");
-    const stockData: StockData = {};
-    const seenSkus = new Set();
-
-    if (data && data.length > 0) {
-      data.forEach((row, index) => {
-        if (row.length < 13) {
-          console.warn(`Fila ${index + 2} inválida (incompleta). Omitiendo.`);
-          return;
-        }
-
-        const [
-          sku,
-          title,
-          price,
-          regularPrice,
-          disponible,
-          total,
-          notas,
-          featured,
-          tipo,
-          tier,
-          benefitGeneral,
-          quienes_pueden_usarlo,
-          uso_diario,
-        ] = row;
-
-        const cleanSku = String(sku).trim();
-        if (!cleanSku) {
-          console.warn(`Fila ${index + 2} sin SKU válido. Omitiendo.`);
-          return;
-        }
-
-        if (seenSkus.has(cleanSku)) {
-          console.warn(`SKU duplicado: ${cleanSku} en fila ${index + 2}`);
-          return;
-        }
-
-        seenSkus.add(cleanSku);
-        stockData[cleanSku] = {
-          sku: cleanSku,
-          title: String(title),
-          price: Math.max(0, Number(price) || 0),
-          regularPrice: Math.max(0, Number(regularPrice) || 0),
-          disponible: Math.max(0, Number(disponible) || 0),
-          total: Math.max(0, Number(total) || 0),
-          notas: String(notas),
-          featured: String(featured).toUpperCase() === "TRUE",
-          tipo:
-            String(tipo).toLowerCase() === "subscription"
-              ? "subscription"
-              : "package",
-          tier: Math.max(0, Number(tier) || 0),
-          benefitGeneral: String(benefitGeneral),
-          quienes_pueden_usarlo: String(quienes_pueden_usarlo),
-          uso_diario: String(uso_diario),
-        };
-      });
-    }
-
-    cachedData = {
-      inventory: stockData,
-      timestamp: Date.now(),
-    };
-
-    return stockData;
+    return await fetchInventory();
   } catch (error) {
-    if (retriesLeft > 0) {
-      console.log(
-        `Reintentando obtener datos, intentos restantes: ${retriesLeft - 1}`,
-      );
-      await new Promise((resolve) =>
-        setTimeout(resolve, (3 - retriesLeft + 1) * 1000),
-      );
-      return fetchInventoryWithRetry(retriesLeft - 1);
-    }
-    throw error;
+    console.error("Error obteniendo stock:", error);
+    return {};
   }
 }
 

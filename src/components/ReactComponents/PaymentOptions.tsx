@@ -12,12 +12,14 @@ interface PaymentOptionsProps {
   basePrice: number;
   title: string;
   packageId: string;
+  productType?: "package" | "subscription";
 }
 
 const PaymentOptions = ({
   basePrice,
   title,
   packageId,
+  productType = "package",
 }: PaymentOptionsProps) => {
   const [shippingType, setShippingType] = useState<
     "distrito" | "departamento" | "internacional" | "local" | null
@@ -69,7 +71,29 @@ const PaymentOptions = ({
 
   const handleCulqiSuccess = (token: any) => {
     console.log("Pago exitoso", token);
-    window.location.href = `/complete-your-details?token=${token.id}`;
+
+    // Agregar información extra al token para enviar al backend
+    const paymentInfo = {
+      token_id: token.id,
+      product_id: packageId,
+      product_type: productType,
+      shipping_type: shippingType,
+      shipping_location: selectedLocation,
+      shipping_cost: shippingCost,
+      total_price: totalPrice,
+      is_subscription: token.isSubscription || false,
+    };
+
+    // Redirigir a la página de completar detalles con la información necesaria
+    const queryParams = new URLSearchParams({
+      token: token.id,
+      product_type: productType,
+      shipping_type: shippingType || "",
+      shipping_location: selectedLocation,
+      shipping_cost: shippingCost.toString(),
+    }).toString();
+
+    window.location.href = `/complete-your-details?${queryParams}`;
   };
 
   const handleCulqiError = (error: any) => {
@@ -81,7 +105,7 @@ const PaymentOptions = ({
 
   const handleWhatsAppContact = () => {
     const message = encodeURIComponent(
-      `Hola, estoy interesado en comprar ${title} con envío internacional. ¿Podrían darme más información?`,
+      `Hola, estoy interesado en ${productType === "subscription" ? "la suscripción" : "comprar"} ${title} con envío internacional. ¿Podrían darme más información?`,
     );
     const whatsappUrl = `https://wa.me/+51939114496?text=${message}`;
     window.open(whatsappUrl, "_blank");
@@ -92,6 +116,7 @@ const PaymentOptions = ({
           event_category: "contact",
           event_label: "international_shipping",
           value: basePrice,
+          product_type: productType,
         });
       }
     } catch (e) {
@@ -111,7 +136,21 @@ const PaymentOptions = ({
 
   return (
     <div className="payment-section">
-      <h2>Método de Pago</h2>
+      <h2>
+        {productType === "subscription"
+          ? "Método de Suscripción"
+          : "Método de Pago"}
+      </h2>
+
+      {productType === "subscription" && (
+        <div className="subscription-info">
+          <p className="subscription-notice">
+            <strong>Nota:</strong> Esta es una suscripción mensual. Se realizará
+            un cargo de S/. {basePrice.toFixed(2)} automáticamente cada mes a tu
+            tarjeta.
+          </p>
+        </div>
+      )}
 
       <div className="shipping-selector">
         <div className="location-type-buttons">
@@ -144,8 +183,9 @@ const PaymentOptions = ({
         {shippingType === "local" ? (
           <div className="local-pickup-info">
             <p>
-              Puede retirar su producto en nuestra tienda. No hay costo
-              adicional de envío.
+              Puede retirar su{" "}
+              {productType === "subscription" ? "suscripción" : "producto"} en
+              nuestra tienda. No hay costo adicional de envío.
             </p>
             <div className="store-address-container">
               <div className="store-details">
@@ -224,7 +264,22 @@ const PaymentOptions = ({
             shippingType === "departamento" ||
             shippingType === "local") && (
             <div className="total-price-display">
-              Precio total: S/. {totalPrice.toFixed(2)}
+              {productType === "subscription" ? (
+                <>
+                  <div>Precio mensual: S/. {basePrice.toFixed(2)}</div>
+                  {shippingCost > 0 && (
+                    <div>
+                      + Costo de envío (primer mes): S/.{" "}
+                      {shippingCost.toFixed(2)}
+                    </div>
+                  )}
+                  <div className="total-with-shipping">
+                    Total primer pago: S/. {totalPrice.toFixed(2)}
+                  </div>
+                </>
+              ) : (
+                <>Precio total: S/. {totalPrice.toFixed(2)}</>
+              )}
             </div>
           )}
       </div>
@@ -236,6 +291,8 @@ const PaymentOptions = ({
             currency="PEN"
             amount={Math.round(totalPrice * 100)}
             description={`${title} - ${
+              productType === "subscription" ? "Suscripción mensual - " : ""
+            }${
               shippingType === "local"
                 ? "Retiro local"
                 : shippingType === "distrito"
@@ -244,6 +301,7 @@ const PaymentOptions = ({
             }`}
             onSuccess={handleCulqiSuccess}
             onError={handleCulqiError}
+            productType={productType}
           />
 
           {error && <div className="error-message">{error}</div>}
@@ -252,13 +310,25 @@ const PaymentOptions = ({
             <span className="lock-icon">🔒</span>
             <span>Protegido por encriptación SSL de 256-bits</span>
           </div>
-          <div className="cookies-info">
-            <small>
-              Este método de pago requiere cookies de terceros. Al hacer clic en
-              "Pagar", aceptas el uso de cookies necesarias para procesar el
-              pago.
-            </small>
-          </div>
+
+          {productType === "subscription" ? (
+            <div className="subscription-terms">
+              <small>
+                Al hacer clic en "Suscribirse", aceptas que se realizará un
+                cargo mensual a tu tarjeta por el monto de S/.{" "}
+                {basePrice.toFixed(2)} hasta que canceles la suscripción. Puedes
+                cancelar en cualquier momento.
+              </small>
+            </div>
+          ) : (
+            <div className="cookies-info">
+              <small>
+                Este método de pago requiere cookies de terceros. Al hacer clic
+                en "Pagar", aceptas el uso de cookies necesarias para procesar
+                el pago.
+              </small>
+            </div>
+          )}
         </div>
       )}
     </div>

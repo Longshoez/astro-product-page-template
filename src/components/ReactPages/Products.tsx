@@ -5,7 +5,6 @@ import ProductContainer from "../../components/ReactComponents/ProductContainer"
 import { SectionLayout } from "../ReactComponents/SectionLayout";
 import useResponsiveness from "../../utils/useResponsiveness";
 import { useMediaQuery } from "react-responsive";
-import { Carousel } from "react-responsive-carousel";
 
 interface Product {
   sku: string;

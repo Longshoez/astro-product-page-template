@@ -12,12 +12,16 @@ const { sku } = Astro.params;
 let packageData = null;
 let stockInfo = null;
 let errorType = null;
+let productType = null;
 
 try {
   const stockData = await getInventory();
 
   if (stockData && stockData[sku]) {
     stockInfo = stockData[sku];
+    productType = stockInfo.tipo || "package";
+
+    console.log("Producto tipo:", stockData[sku]);
 
     if (stockInfo.disponible > 0) {
       packageData = {
@@ -27,6 +31,7 @@ try {
         savings: Math.round(stockInfo.regularPrice - stockInfo.price),
         description: stockInfo.notas || `Paquete ${sku}`,
         availableStock: stockInfo.disponible,
+        type: productType,
       };
     } else {
       errorType = "sin_stock";
@@ -83,6 +88,7 @@ try {
             <span class="arrow">←</span> Volver a inicio
           </a>
         </div>
+
         <div class="package-detail">
           <PackageHeader
             title={packageData.title}
@@ -90,16 +96,24 @@ try {
             originalPrice={packageData.originalPrice}
             savings={packageData.savings}
           />
+
           <PackageDescription description={packageData.description} />
+
           <PaymentOptions
             client:load
             basePrice={packageData.price}
             title={packageData.title}
             packageId={sku!}
+            productType={packageData.type}
           />
-          {/*          <GuaranteeBox />*/}
+
+          {/* <GuaranteeBox /> */}
         </div>
-        <OrderSummary title={packageData.title} />
+
+        <OrderSummary
+          title={packageData.title}
+          productType={packageData.type}
+        />
       </div>
     </Layout>
   ) : (
@@ -108,34 +122,40 @@ try {
     </Layout>
   )
 }
+
 <style>
   html {
     font-size: 14px;
     color: #333;
   }
+
   .package-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 1rem;
-    max-width: 1000px;
+    gap: 1.5rem;
+    max-width: 1100px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
   }
+
   @media (max-width: 768px) {
     .package-container {
       grid-template-columns: 1fr;
     }
   }
+
   .package-detail {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
   }
+
   .back-button-container {
     grid-column: 1 / -1;
     margin-bottom: 1rem;
   }
+
   .back-button {
     display: inline-flex;
     align-items: center;
@@ -148,11 +168,13 @@ try {
     transition: all 0.2s ease;
     border: 1px solid #e0e0e0;
   }
+
   .back-button:hover {
     background-color: #e9ecef;
     color: #212529;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
+
   .arrow {
     font-size: 1.2rem;
     margin-right: 0.3rem;
