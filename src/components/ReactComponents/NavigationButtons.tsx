@@ -192,15 +192,15 @@ const NavigationButtons: React.FC = () => {
             // fontW/eight: handleSelect(link.target),
             opacity: active === link.target ? 1 : 0.5,
             transition: ".25s ease-in-out",
-            color: "#f2b130",
+            color: "white",
 
             ...(isMobile
               ? {
-                  fontSize: "20px",
-                  padding: "10px 0",
-                  textAlign: "center",
-                  width: "100%",
-                }
+                fontSize: "20px",
+                padding: "10px 0",
+                textAlign: "center",
+                width: "100%",
+              }
               : {}),
           }}
         >

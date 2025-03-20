@@ -23,7 +23,7 @@ const About = React.forwardRef<HTMLDivElement, LandingProps>((props, ref) => {
 
   // Calculate content width based on the parent's padding
   // This ensures the content respects the parent's padding
-  
+
   return (
     <SectionLayout
       id={props.id}
@@ -164,7 +164,7 @@ const About = React.forwardRef<HTMLDivElement, LandingProps>((props, ref) => {
               font-size: 2.4rem;
               line-height: ${mobile ? "auto" : "1.75vw"};
               margin-top: 0;
-              color: #12623C;
+              color: #17005e;
             }
 
             .about-paragraph {
@@ -201,18 +201,17 @@ const About = React.forwardRef<HTMLDivElement, LandingProps>((props, ref) => {
             }
 
             .about-check {
-              color: #969628;
+              color: #3737a4;
               font-size: 1.5rem;
               margin-right: 1rem;
             }
 
-            ${
-              mobile &&
-              `.about-section:not(:nth-of-type(2)) {
+            ${mobile &&
+          `.about-section:not(:nth-of-type(2)) {
                 display: flex;
                 flex-direction: column-reverse;
               }`
-            }
+          }
           `}
       </style>
     </SectionLayout>

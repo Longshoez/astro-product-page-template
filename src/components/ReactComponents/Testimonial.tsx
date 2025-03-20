@@ -2,6 +2,8 @@ import { useMediaQuery } from "react-responsive";
 import PlaceHolder from "./PlaceHolder";
 import { useEffect, useState } from "react";
 import useResponsiveness from "../../utils/useResponsiveness";
+import image from '../../../src/assets/user1.png?url'
+
 
 interface TestimonialItem {
   name: string;
@@ -47,7 +49,7 @@ export const Testimonial = ({
         flexDirection: "row",
       }}
     >
-      {/* <div
+      <div
         style={{
           width: "100%",
           borderRadius: "20px",
@@ -72,7 +74,7 @@ export const Testimonial = ({
         ) : (
           <PlaceHolder />
         )}
-      </div> */}
+      </div>
       <div
         style={{
           display: "flex",
@@ -107,7 +109,7 @@ export const Testimonial = ({
             marginTop: "0.5rem",
             fontSize: isMobile ? "11px" : isTablet ? "14px" : "16px",
             width: "100%",
-            color: "#333",
+            color: "#17005e",
           }}
         >
           {name}

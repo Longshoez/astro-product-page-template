@@ -13,17 +13,11 @@ export const SectionLayout = ({
   style,
 }: any) => {
   const gradientBackground = `
-      radial-gradient(
-        41.74% 98.84% at 61.04% 47.01%,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.2) 100%
-      ),
       linear-gradient(
-        68.99deg,
-        #003325 10.95%,
-        #013726 60.57%,
-        #013520 103.7%
-      ),
+      90deg, 
+      rgba(5,0,94,1) 0%,
+      rgba(55,55,164,1) 51%, 
+      rgba(0,212,255,1) 100%),
       #013726`;
   const mobile = useMediaQuery({ orientation: "portrait" });
 

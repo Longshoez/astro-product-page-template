@@ -68,12 +68,11 @@ const Testimonials = React.forwardRef<HTMLDivElement, LandingProps>(
                   height: "100%",
                   border: "none"
                 }}
-                src="https://www.youtube.com/embed/FgpXYVLzCEs?si=cG0SBXKDw-bf_Vsh"
+                src="https://www.youtube.com/embed/sEH3pOhj0xs?si=lN7jNgOVJN8TH_vG"
                 title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+                allow="accelerometer; 
+                autoplay; 
+                clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             <div
               style={{

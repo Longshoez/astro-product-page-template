@@ -69,7 +69,7 @@ const TestimonialCarousel = () => {
           // fontSize: isMobile ? "24px" : isTablet ? "34px" : "50px",
           fontSize: isMobile ? "2rem" : small ? "3vw" : "2.5rem",
           fontWeight: 200,
-          color: "#c1dc3a",
+          color: "white",
           textAlign: "center",
           margin: isMobile ? "1rem" : "2rem",
         }}
